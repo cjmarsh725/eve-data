@@ -12,12 +12,12 @@ const formatData = async () => {
         id: sys.solarSystemID,
         regionID: sys.regionID,
         security: sys.security,
-        x: sys.x,
-        y: sys.y,
-        z: sys.z,
+        x: sys.x / 1e17,
+        y: sys.y / 1e17,
+        z: sys.z / 1e17,
       };
     });
-    fs.writeFile(path.resolve(__dirname, "data/map.json"), JSON.stringify(systems, null, 2), err => console.log(err));
+    fs.writeFile(path.resolve(__dirname, "../src/data/map.json"), JSON.stringify(systems, null, 2), err => console.log(err));
   } catch (error) {
     console.log(error);
   }

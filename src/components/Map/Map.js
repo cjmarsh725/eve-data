@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
+import mapdata from '../../data/map.json';
 import './Map.css';
 
 class Map extends Component {
@@ -20,6 +21,9 @@ class Map extends Component {
 
     this.mount.appendChild(this.renderer.domElement);
     this.start();
+    const minX = mapdata.reduce((min, sys) => sys.z < min ? sys.z : min, mapdata[0].z);
+    const maxX = mapdata.reduce((max, sys) => sys.z > max ? sys.z : max, mapdata[0].z);
+    console.log(`Min: ${minX / 1e17} | Max: ${maxX / 1e17}`);
   }
 
   componentWillUnmount() {
