@@ -9,21 +9,20 @@ class Map extends Component {
     const height = this.mount.clientHeight;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    this.camera.position.z = 100;
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    const geometry = new THREE.BoxGeometry(1,1,1);
-    this.material = new THREE.MeshBasicMaterial({ color: "#0000ff" });
-    this.cube = new THREE.Mesh(geometry, this.material);
-
-    this.camera.position.z = 4;
-    this.scene.add(this.cube);
     this.renderer.setClearColor("#000000");
     this.renderer.setSize(width, height);
+    const geometry = new THREE.BufferGeometry();
+    const vertices = [];
+    mapdata.forEach(sys => vertices.push(sys.x, sys.y, sys.z));
+    geometry.addAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    this.material = new THREE.PointsMaterial({ size: 1, sizeAttenuation: true, transparent: true, color: "#ff0000" });
+    this.points = new THREE.Points(geometry, this.material);
+    this.scene.add(this.points);
 
     this.mount.appendChild(this.renderer.domElement);
     this.start();
-    const minX = mapdata.reduce((min, sys) => sys.z < min ? sys.z : min, mapdata[0].z);
-    const maxX = mapdata.reduce((max, sys) => sys.z > max ? sys.z : max, mapdata[0].z);
-    console.log(`Min: ${minX / 1e17} | Max: ${maxX / 1e17}`);
   }
 
   componentWillUnmount() {
@@ -42,8 +41,8 @@ class Map extends Component {
   }
 
   update = () => {
-    this.cube.rotation.x += 0.01;
-    this.cube.rotation.y += 0.01;
+    this.points.rotation.x += 0.001;
+    this.points.rotation.y += 0.001;
     
     this.renderer.render(this.scene, this.camera);
     this.frameId = window.requestAnimationFrame(this.update);
