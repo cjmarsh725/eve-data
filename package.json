@@ -30,6 +30,7 @@
     ]
   },
   "devDependencies": {
+    "fs": "^0.0.1-security",
     "sqlite": "^3.0.3"
   }
 }
